@@ -27,17 +27,8 @@ app.use("/person", personRoutes);
 // servir arquivos estáticos do build do frontend
 app.use(express.static(path.join(__dirname, "frontend", "dist")));
 
-// rotas inicial / endpoint
-app.get("/", (req, res) => {
-    res.json({ message: "Oi Express!" });
-});
-
-// fallback para React Router - servir index.html para rotas não-API
-app.get("*", (req, res) => {
-    // Não interceptar rotas da API
-    if (req.path.startsWith("/person")) {
-        return res.status(404).json({ error: "Rota não encontrada" });
-    }
+// fallback para React Router - servir index.html para todas as outras rotas
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
 
