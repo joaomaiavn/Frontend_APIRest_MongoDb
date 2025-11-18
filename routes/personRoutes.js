@@ -22,8 +22,9 @@ router.post("/", async (req, res) => {
 
     try {
         // criando dados
-        await Person.create(person);
-        res.status(201).json({ message: "Pessoa inserida com sucesso!" });
+        const createdPerson = await Person.create(person);
+        // retorna o documento criado para o frontend usar diretamente
+        res.status(201).json(createdPerson);
     } catch (error) {
         res.status(500).json({ error: error });
     }
@@ -81,14 +82,15 @@ router.patch("/:id", async (req, res) => {
     }
 
     try {
-        const updatedPerson = await Person.updateOne({ _id: id }, person);
+        // retorna o documento atualizado
+        const updatedPerson = await Person.findOneAndUpdate({ _id: id }, person, { new: true });
 
-        if (updatedPerson.matchedCount === 0) {
+        if (!updatedPerson) {
             res.status(422).json({ message: "Pessoa não encontrada!" });
             return;
         }
 
-        res.status(200).json(person);
+        res.status(200).json(updatedPerson);
         
     } catch (error) {
         res.status(500).json({ error: error });

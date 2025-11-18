@@ -1,1 +1,34 @@
-node_modules
+# Node / JavaScript
+node_modules/
+.eslintcache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+vite.log
+backend.log
+
+# Coverage reports
+coverage/
+
+# Build outputs
+/dist/
+frontend/dist/
+
+# Editor/System
+.vscode/
+.DS_Store
+*.swp
+*.swo
+
+# Frontend nested deps
+frontend/node_modules/

@@ -4,8 +4,8 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const path = require('path');
-const cors = require('cors');
+const path = require("path");
+const cors = require("cors");
 
 const app = express();
 
@@ -24,24 +24,31 @@ app.use(cors());
 const personRoutes = require("./routes/personRoutes");
 app.use("/person", personRoutes);
 
-// rota inicial / endpoint
+// rota inicial / endpoint — se o build do frontend existir, servir index.html,
+// caso contrário, retornar uma resposta JSON simples (útil para ambiente sem build).
 app.get("/", (req, res) => {
-  res.json({ message: "Oi Express!" });
+  const indexPath = path.join(frontendDist, "index.html");
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      // se não existir o build, responder com JSON
+      res.json({ message: "Oi Express!" });
+    }
+  });
 });
 
 // servir frontend build em produção, se existir
-const frontendDist = path.join(__dirname, 'frontend', 'dist');
+const frontendDist = path.join(__dirname, "frontend", "dist");
 app.use(express.static(frontendDist));
 
-app.get('*', (req, res, next) => {
+app.get(/.*/, (req, res, next) => {
   // se a rota começar com /person, passa para as rotas da API
-  if (req.path.startsWith('/person')) return next();
+  if (req.path.startsWith("/person")) return next();
   // senão, tenta servir index.html do build (se existir)
-  const indexPath = path.join(frontendDist, 'index.html');
+  const indexPath = path.join(frontendDist, "index.html");
   res.sendFile(indexPath, err => {
     if (err) {
       // se não existir, respondemos com mensagem padrão (ou 404)
-      res.status(404).json({ message: 'Not found' });
+      res.status(404).json({ message: "Not found" });
     }
   });
 });
@@ -56,6 +63,6 @@ mongoose
   )
   .then(() => {
     console.log("Conectado ao MongoDB!");
-    app.listen(3000, () => console.log('Server rodando na porta 3000'));
+    app.listen(3000, () => console.log("Server rodando na porta 3000"));
   })
   .catch((err) => console.log(err));

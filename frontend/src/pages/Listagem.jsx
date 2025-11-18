@@ -1,64 +1,84 @@
-import React, { useEffect, useState } from 'react';
-import { apiGetPeople } from '../api';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from 'react-router-dom'
+import { getContatos, deleteContato } from "../services/contatoService.js";
+import ContactCard from "../components/ContactCard.jsx";
 
 export default function Listagem() {
-  const [people, setPeople] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [contatos, setContatos] = useState([]);
+  const navigate = useNavigate()
 
-  async function load() {
-    setLoading(true);
-    setError(null);
+  // Busca inicial de contatos da API
+  const load = async () => {
     try {
-      const data = await apiGetPeople();
-      setPeople(data || []);
+      const data = await getContatos();
+      setContatos(data);
     } catch (err) {
       console.error(err);
-      setError('Erro ao carregar: ' + err.message);
-    } finally {
-      setLoading(false);
+      alert("Erro ao carregar contatos");
     }
-  }
+  };
 
-  useEffect(() => { load(); }, []);
+  // if navigated with state (created/updated), merge into list
+  const location = useLocation();
+
+  useEffect(() => {
+    (async () => {
+      await load();
+      // merge created/updated passed from Cadastro
+      if (location && location.state) {
+        const { created, updated } = location.state;
+        if (created) {
+          setContatos((prev) => [created, ...prev]);
+        }
+        if (updated) {
+          setContatos((prev) => prev.map((c) => (c._id === updated._id ? updated : c)));
+        }
+      }
+    })();
+  }, []);
+
+  // Remove um contato e atualiza a lista localmente
+  const handleDelete = async (id) => {
+    if (!confirm("Deseja excluir este contato?")) return;
+    try {
+      await deleteContato(id);
+      setContatos((prev) => prev.filter((c) => c._id !== id));
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao deletar");
+    }
+  };
+
+  if (contatos.length === 0) {
+    return (
+      <div>
+        <h2 className="mb-4">Listagem de Contatos</h2>
+        <div className="alert alert-info">
+          Nenhum contato cadastrado ainda. <a href="/cadastro">Cadastre um agora!</a>
+        </div>
+        <button className="btn btn-primary" onClick={() => navigate('/')}>Voltar ao Home</button>
+      </div>
+    )
+  }
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2>Listagem</h2>
-        <button className="btn btn-outline-primary" onClick={load}>Atualizar</button>
+      <h2 className="mb-4">Listagem de Contatos ({contatos.length})</h2>
+      <div className="row g-3">
+        {contatos.map((contato) => (
+          <div key={contato._id} className="col-md-6 col-lg-4">
+            <ContactCard 
+              contato={contato} 
+              onRemove={handleDelete} // Passa a função de remoção como prop
+            />
+          </div>
+        ))}
       </div>
-
-      <div className="card shadow-sm">
-        <div className="card-body">
-          {loading && <div>Carregando...</div>}
-          {error && <div className="alert alert-danger">{error}</div>}
-          {!loading && !error && (
-            <div className="table-responsive">
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Nome</th>
-                    <th>Salary</th>
-                    <th>Aprovado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {people.length === 0 && (
-                    <tr><td colSpan="3" className="text-center">Nenhum registro</td></tr>
-                  )}
-                  {people.map(p => (
-                    <tr key={p._id || p.id}>
-                      <td>{p.name}</td>
-                      <td>{p.salary}</td>
-                      <td>{p.approved ? 'Sim' : 'Não'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+      <div className="mt-3">
+        <button className="btn btn-success me-2" onClick={() => navigate('/cadastro')}>
+          + Novo Contato
+        </button>
+        <button className="btn btn-secondary" onClick={() => navigate('/')}>Voltar ao Home</button>
       </div>
     </div>
   );
