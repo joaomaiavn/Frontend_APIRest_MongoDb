@@ -1,6 +1,9 @@
 // ESLint v9+ config for Node.js
 module.exports = [
   {
+    ignores: ["frontend/**", "coverage/**"]
+  },
+  {
     files: ["**/*.js"],
     languageOptions: {
       ecmaVersion: 2021,
