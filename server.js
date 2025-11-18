@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 });
 
 // fallback para SPA - retorna index.html para todas as rotas não-API
-app.get("*", (req, res) => {
+app.use((req, res) => {
     const indexPath = path.join(__dirname, "frontend", "dist", "index.html");
     res.sendFile(indexPath, (err) => {
         if (err) {
