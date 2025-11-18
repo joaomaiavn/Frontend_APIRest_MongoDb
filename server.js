@@ -4,9 +4,13 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const path = require("path");
 const app = express();
 
 // forma de ler JSON / middlewares
+app.use(cors());
+
 app.use(
     express.urlencoded({
         extended: true,
@@ -20,9 +24,24 @@ const personRoutes = require("./routes/personRoutes");
 
 app.use("/person", personRoutes);
 
+// servir arquivos estáticos do frontend build
+app.use(express.static(path.join(__dirname, "frontend", "dist")));
+
 // rotas inicial / endpoint
 app.get("/", (req, res) => {
     res.json({ message: "Oi Express!" });
+});
+
+// fallback para rotas do React (deve vir após rotas da API)
+app.get("*", (req, res) => {
+    const indexPath = path.join(__dirname, "frontend", "dist", "index.html");
+    // Verificar se o arquivo existe antes de servir
+    const fs = require("fs");
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).json({ message: "Frontend build not found. Run 'npm run build' in frontend directory." });
+    }
 });
 
 // entregar uma porta
