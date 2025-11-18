@@ -16,6 +16,63 @@ Esta é uma API RESTful desenvolvida em Node.js utilizando Express e MongoDB (Mo
 - Jest + Supertest (testes)
 - ESLint (análise estática)
 
+## Pré-requisitos
+- Node.js 18+ e npm
+- Conta/instância MongoDB (Atlas ou local)
+- URL de conexão (usuário e senha) para configurar no `.env`
+
+## Clonar o repositório e instalar
+Os artefatos gerados (ex.: `node_modules/`, `frontend/dist/`, `coverage/`, `.env`) estão no `.gitignore` e não vêm no repositório. Após clonar, você precisa instalar e (se for o caso) gerar o build novamente.
+
+Clone via HTTPS (ou use SSH se preferir):
+```bash
+git clone https://github.com/joaomaiavn/Frontend_APIRest_MongoDb.git
+cd Frontend_APIRest_MongoDb
+```
+
+Instale as dependências da raiz (backend) e do frontend:
+```bash
+npm install
+cd frontend
+npm install
+cd ..
+```
+
+### Instalação recomendada (automática via package.json)
+- Sempre prefira usar `npm install` na raiz e dentro de `frontend/`. Isso garante a instalação exata conforme `package.json`/`package-lock.json`.
+
+### Instalação manual dos pacotes (opcional)
+Use apenas se estiver reconstruindo do zero sem `node_modules` e quiser instalar pacote a pacote conforme este projeto.
+
+Backend (raiz):
+```bash
+# Dependências de execução
+npm install express mongoose mongodb cors dotenv nodemon
+
+# Dependências de desenvolvimento (testes e lint)
+npm install -D jest supertest babel-jest @babel/preset-env eslint eslint-plugin-jest
+```
+
+Frontend (`frontend/`):
+```bash
+cd frontend
+# Dependências de execução
+npm install react@^18 react-dom@^18 react-router-dom@^7 react-router@^7 bootstrap bootstrap-icons
+
+# Dependências de desenvolvimento (build, lint e e2e)
+npm install -D vite@^7 eslint eslint-plugin-react puppeteer
+```
+
+Observação: após a instalação manual, confirme que os scripts funcionam:
+```bash
+# raiz
+npm start
+
+# frontend (dev)
+cd frontend
+npm run dev
+```
+
 ## Como rodar o projeto
 
 1. Instale as dependências:
@@ -53,6 +110,10 @@ cd frontend
 npm run build
 ```
 Isso gera `frontend/dist`. Com o servidor backend iniciado (`npm start` na raiz), acesse `http://localhost:3000/` para ver o SPA.
+
+Observações importantes sobre o `.gitignore`:
+- `node_modules/`, `frontend/dist/`, `coverage/` e `.env` não são versionados.
+- Após clonar, sempre rode `npm install` (raiz e `frontend/`). Para produção, gere o build com `npm run build` dentro de `frontend/`.
 
 ### Rotas do SPA
 - `/` (Home)
