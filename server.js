@@ -4,9 +4,13 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const path = require("path");
 const app = express();
 
 // forma de ler JSON / middlewares
+app.use(cors());
+
 app.use(
     express.urlencoded({
         extended: true,
@@ -20,9 +24,12 @@ const personRoutes = require("./routes/personRoutes");
 
 app.use("/person", personRoutes);
 
-// rotas inicial / endpoint
-app.get("/", (req, res) => {
-    res.json({ message: "Oi Express!" });
+// servir arquivos estáticos do build do frontend
+app.use(express.static(path.join(__dirname, "frontend", "dist")));
+
+// fallback para React Router - servir index.html para todas as outras rotas
+app.use((req, res) => {
+    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
 
 // entregar uma porta
