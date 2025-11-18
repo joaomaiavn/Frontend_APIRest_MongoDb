@@ -6,7 +6,7 @@ const Home = () => (
     <h1 className="display-4 text-primary mb-4">Bem-vindo à Agenda de Contatos!</h1>
     <p className="lead">
       Gerencie sua lista de contatos facilmente. Cadastre nomes, e-mails e telefones, e acesse-os a qualquer momento.
-      Os dados são salvos localmente no seu navegador.
+      Os dados são salvos no MongoDB.
     </p>
     <div className="row mt-4">
       <div className="col-md-6">

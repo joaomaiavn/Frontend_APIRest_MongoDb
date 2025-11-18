@@ -10,7 +10,7 @@ const Header = () => {
       <div className="container">
         <Link className="navbar-brand fw-bold" to="/">
           <i className="bi bi-person-lines-fill me-2"></i> {/* Ícone de agenda */}
-          Agenda de Contatos
+          Cadastro de Clientes
         </Link>
         <div className="navbar-nav ms-auto">
           <Link 

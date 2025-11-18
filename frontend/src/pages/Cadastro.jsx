@@ -6,6 +6,8 @@ export default function Cadastro() {
   const [name, setName] = useState("");
   const [salary, setSalary] = useState("");
   const [approved, setApproved] = useState(false);
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -18,6 +20,8 @@ export default function Cadastro() {
         setName(p.name || "");
         setSalary(p.salary ?? "");
         setApproved(Boolean(p.approved));
+        setEmail(p.email || "");
+        setPhone(p.phone || "");
       } catch (err) {
         console.error(err);
         alert("Erro ao carregar contato");
@@ -29,14 +33,14 @@ export default function Cadastro() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = { name, salary: salary === "" ? undefined : Number(salary), approved };
+      const payload = { name, salary: salary === "" ? undefined : Number(salary), approved, email, phone };
       if (id) {
         const updated = await updateContato(id, payload);
-        // pass the updated document to the list view to avoid re-fetch
+        // passa o documento atualizado para a listagem e evita novo fetch
         navigate("/listagem", { state: { updated } });
       } else {
         const created = await createContato(payload);
-        // pass the created document to the list view to avoid re-fetch
+        // passa o documento criado para a listagem e evita novo fetch
         navigate("/listagem", { state: { created } });
       }
     } catch (err) {
@@ -50,6 +54,14 @@ export default function Cadastro() {
       <div className="col-12">
         <label className="form-label">Nome</label>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nome" required className="form-control" />
+      </div>
+      <div className="col-md-6">
+        <label className="form-label">E-mail</label>
+        <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@exemplo.com" type="email" className="form-control" />
+      </div>
+      <div className="col-md-6">
+        <label className="form-label">Telefone</label>
+        <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(99) 99999-9999" type="tel" className="form-control" />
       </div>
       <div className="col-md-6">
         <label className="form-label">Salário</label>

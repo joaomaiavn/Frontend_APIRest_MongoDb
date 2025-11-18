@@ -21,6 +21,8 @@ const ContactCard = ({ contato, onRemove }) => { // Recebe onRemove como prop
       <div className="card-body d-flex flex-column">
         <h5 className="card-title">{contato.name}</h5>
         <p className="card-text flex-grow-1">
+          <strong>E-mail:</strong> {contato.email || '-'}<br />
+          <strong>Telefone:</strong> {contato.phone || '-'}<br />
           <strong>Salário:</strong> {contato.salary ?? '-'}<br />
           <strong>Aprovado:</strong> {contato.approved ? 'Sim' : 'Não'}
         </p>

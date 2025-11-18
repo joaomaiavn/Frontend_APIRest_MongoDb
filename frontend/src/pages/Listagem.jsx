@@ -18,31 +18,41 @@ export default function Listagem() {
     }
   };
 
-  // if navigated with state (created/updated), merge into list
+  // Se navegou com state (criado/atualizado), mescla na lista
   const location = useLocation();
 
   useEffect(() => {
     (async () => {
       await load();
-      // merge created/updated passed from Cadastro
+      // Mescla itens criados/atualizados recebidos da página de Cadastro
       if (location && location.state) {
         const { created, updated } = location.state;
         if (created) {
-          setContatos((prev) => [created, ...prev]);
+          setContatos((prev) => (
+            prev.some((c) => c._id === created._id)
+              ? prev
+              : [created, ...prev]
+          ));
         }
         if (updated) {
           setContatos((prev) => prev.map((c) => (c._id === updated._id ? updated : c)));
         }
+        // Limpa o state de navegação para evitar mesclar novamente ao re-renderizar
+        navigate('.', { replace: true, state: null });
       }
     })();
   }, []);
 
   // Remove um contato e atualiza a lista localmente
   const handleDelete = async (id) => {
-    if (!confirm("Deseja excluir este contato?")) return;
+    if (!confirm("Deseja excluir este contato?")) 
+      return;
+    
+    
     try {
       await deleteContato(id);
       setContatos((prev) => prev.filter((c) => c._id !== id));
+      
     } catch (err) {
       console.error(err);
       alert("Erro ao deletar");

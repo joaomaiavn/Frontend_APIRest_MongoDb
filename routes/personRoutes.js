@@ -7,7 +7,7 @@ const Person = require("../models/Person");
 router.post("/", async (req, res) => {
     // req.body
     //{ name: 'João', salary: 5000, approved: true  }
-    const { name, salary, approved } = req.body;
+    const { name, salary, approved, email, phone } = req.body;
 
     if (!name) {
         res.status(422).json({ error: "O nome é obrigatório!" });
@@ -17,7 +17,9 @@ router.post("/", async (req, res) => {
     const person = {
         name,
         salary,
-        approved
+        approved,
+        email,
+        phone,
     };
 
     try {
@@ -68,12 +70,14 @@ router.get("/:id", async (req, res) => {
 router.patch("/:id", async (req, res) => {
     const id = req.params.id;
     
-    const { name, salary, approved } = req.body;
+    const { name, salary, approved, email, phone } = req.body;
     
     const person = {
         name,
         salary,
-        approved
+        approved,
+        email,
+        phone,
     };
 
     if (!name) {

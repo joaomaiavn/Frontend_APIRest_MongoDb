@@ -9,6 +9,18 @@ Esta é uma API RESTful desenvolvida em Node.js utilizando Express e MongoDB (Mo
 - **Atualizar pessoa**: PATCH `/person/:id`
 - **Deletar pessoa**: DELETE `/person/:id`
 
+### Campos do recurso `Person`
+Os registros possuem os campos abaixo (todos opcionais, exceto `name`):
+```json
+{
+  "name": "João da Silva",        
+  "email": "joao@email.com",     
+  "phone": "+55 11 99999-9999",  
+  "salary": 5000,                 
+  "approved": true                
+}
+```
+
 ## Tecnologias
 - Node.js
 - Express
@@ -117,8 +129,8 @@ Observações importantes sobre o `.gitignore`:
 
 ### Rotas do SPA
 - `/` (Home)
-- `/cadastro` (Criar contato)
-- `/cadastro/:id` (Editar contato)
+- `/cadastro` (Criar contato — Nome, E-mail, Telefone, Salário, Aprovado)
+- `/cadastro/:id` (Editar contato — Nome, E-mail, Telefone, Salário, Aprovado)
 - `/listagem` (Listar contatos)
 - Rota inválida → exibe página de 404 do SPA
 
