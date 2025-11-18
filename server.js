@@ -24,16 +24,17 @@ const personRoutes = require("./routes/personRoutes");
 
 app.use("/person", personRoutes);
 
-// servir arquivos estáticos do frontend build
-app.use(express.static(path.join(__dirname, "frontend", "dist")));
-
 // rotas inicial / endpoint
 app.get("/", (req, res) => {
     res.json({ message: "Oi Express!" });
 });
 
-// fallback para rotas do React (deve vir após rotas da API)
-app.get("*", (req, res) => {
+// servir arquivos estáticos do frontend build
+app.use(express.static(path.join(__dirname, "frontend", "dist")));
+
+// fallback para rotas do React (deve vir após rotas da API e arquivos estáticos)
+// Em Express 5, usamos um middleware genérico em vez de "*"
+app.use((req, res) => {
     const indexPath = path.join(__dirname, "frontend", "dist", "index.html");
     // Verificar se o arquivo existe antes de servir
     const fs = require("fs");
